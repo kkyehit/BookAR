@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
+
+<mapper namespace="server.DAO.TBDAO">
+
+    <select id="findByName" resultType="server.model.TBModel">
+        SELECT * FROM tb where name = #{0}
+    </select >
+
+    <select id="findAll" resultType="server.model.TBModel">
+        SELECT * FROM tb
+    </select>
+
+    <insert id="insertTBModel">
+        INSERT INTO tb VALUES (#{name}, #{x}, #{y}, #{z})
+    </insert>
+</mapper>

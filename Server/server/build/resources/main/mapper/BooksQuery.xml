@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
+
+<mapper namespace="server.DAO.BooksDAO">
+    <select id="findByName" resultType="server.model.BooksModel">
+        SELECT * FROM books where bookName like concat('%',#{name},'%')
+    </select>
+
+    <select id="findByAuthor" resultType="server.model.BooksModel">
+        SELECT * FROM books where authorName like concat('%',#{author},'%')
+    </select>
+
+    <select id="findById" resultType="server.model.BooksModel">
+        SELECT * FROM books where id = #{0}
+    </select>
+
+    <select id="findByState" resultType="server.model.BooksModel">
+        SELECT * FROM books where state = #{0}
+    </select>
+
+    <select id="findAll" resultType="server.model.BooksModel">
+        SELECT * FROM books
+    </select>
+
+    <insert id="insertBooksModel">
+        INSERT INTO books (bookName, authorName, tableName) VALUES (#{bookName}, #{authorName}, #{tableName})
+    </insert>
+</mapper>
