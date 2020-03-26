@@ -5,8 +5,10 @@ import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.hardware.*
 import android.location.Criteria
 import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
 import android.net.wifi.ScanResult
 import android.net.wifi.WifiManager
@@ -31,6 +33,7 @@ import com.google.ar.sceneform.AnchorNode
 import com.example.bar.config.NetworkConfig
 import com.google.ar.core.*
 import com.google.ar.sceneform.Node
+import com.google.ar.sceneform.math.Quaternion
 import com.google.ar.sceneform.math.Vector3
 import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.rendering.ViewRenderable
@@ -45,17 +48,12 @@ import java.net.URL
 import java.util.function.Consumer
 import java.util.function.Function
 
-class ARActivity : AppCompatActivity() {
+class ARActivity : AppCompatActivity(){
     private val TAG = ARActivity::class.simpleName
     private val MIN_OPENGL_VERSION = 3.0
 
     private var arFragment: ArFragment? = null
-    private var andyRenderable : ModelRenderable? = null
     private var session : Session? = null
-
-    private var directionRenderable: ModelRenderable? = null
-    private var infoRenderable: ViewRenderable? = null
-    private var flags= 0
 
     private var id :Long = 0L
     private var idString: String = ""
@@ -64,9 +62,18 @@ class ARActivity : AppCompatActivity() {
     private var x = 0.0
     private var y = 0.0
     private var z = 0.0
+    private var tbX = 0.0
+    private var tbY = 0.0
+    private var tbZ = 0.0
     private var lm : LocationManager ?= null
     private var location : Location ?= null
     private var mAnchorNode : AnchorNode ?= null
+
+    private var sm : SensorManager ? = null
+    private var sl : sensorEventListener ?= null
+    private var sensor : Sensor ? = null
+    private var accelerometer : Sensor ? = null
+    private var magnetometer : Sensor ? = null
 
     @RequiresApi(VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,70 +87,21 @@ class ARActivity : AppCompatActivity() {
         idString = id.toString()
         setContentView(R.layout.ar_activity)
         arFragment = supportFragmentManager.findFragmentById(R.id.ux_fragment) as ArFragment
-        ModelRenderable.builder()
-            .setSource(this, R.raw.andy)
-            .build()
-            .thenAccept(Consumer { renderable: ModelRenderable -> andyRenderable = renderable
-            })
-            .exceptionally(
-                Function<Throwable, Void?> { throwable: Throwable? ->
-                    val toast = Toast.makeText(this, "Unable to load andy renderable", Toast.LENGTH_LONG)
-                    toast.setGravity(Gravity.CENTER, 0, 0)
-                    toast.show()
-                    null
-                }
-            )
-
-        ViewRenderable.builder()
-            .setView(this@ARActivity, R.layout.ar_cardview)
-            .build()
-            .thenAccept(
-                Consumer { renderable: ViewRenderable ->
-                    infoRenderable = renderable
-                    val textView = renderable.view as TextView
-                    textView.text = "book id : "+ idString
-                }
-            )
-            .exceptionally(
-                Function<Throwable, Void> { throwable: Throwable? ->
-                    val toast = Toast.makeText(this, "Unable to load view renderable", Toast.LENGTH_LONG)
-                    toast.setGravity(Gravity.CENTER, 0, 0)
-                    toast.show()
-                    throw AssertionError("Could not load plane card view.", throwable)
-                }
-            )
-
+        
+        /**trackable을 터치하는 경우**/
         arFragment!!.setOnTapArPlaneListener { hitResult: HitResult, plane: Plane?, motionEvent: MotionEvent? ->
-            if (andyRenderable == null || infoRenderable == null ) {
-                return@setOnTapArPlaneListener
-            }
-            if(flags != 1) {
-                setLocation()
-                Log.d("log", "x : "+x.toString()+" y : "+y.toString()+" z : "+z.toString())
-                Log.d("log", "x : "+x.toFloat().toString()+" y : "+y.toFloat().toString()+" z : "+z.toFloat().toString())
-                // Create the Anchor.
-                val anchor = hitResult.createAnchor()
-                val anchorNode = AnchorNode(anchor)
-                anchorNode.setParent(arFragment!!.arSceneView.scene)
-                // Create the transformable andy and add it to the anchor.
-                // Create the transformable andy and add it to the anchor.
-                val andy = TransformableNode(arFragment!!.transformationSystem)
-                val pose = anchor.pose
-                andy.worldPosition = Vector3(x.toFloat(), z.toFloat(), y.toFloat())
-                andy.setParent(anchorNode)
-                andy.renderable = andyRenderable
-                andy.select()
 
-                val infoCard = TransformableNode(arFragment!!.transformationSystem)
-                infoCard.setParent(anchorNode)
-                infoCard.renderable = infoRenderable
-                infoCard.isEnabled = true
-                infoCard.localPosition = Vector3(x.toFloat(), z.toFloat() + 0.5F, y.toFloat())
+        }
+        
+        /**방위각 구하기**/
+        sm = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        sensor = sm!!.getDefaultSensor(Sensor.TYPE_ORIENTATION) as Sensor
+        accelerometer = sm!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        magnetometer = sm!!.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+        sl = sensorEventListener(accelerometer,magnetometer)
+        setLocation()
 
-
-                flags += 1;
-            }
-         }
+        /**session 설정후 할당 및 시작**/
         val session = Session(this@ARActivity)
         val config = Config(session)
         config.cloudAnchorMode = Config.CloudAnchorMode.ENABLED
@@ -152,7 +110,8 @@ class ARActivity : AppCompatActivity() {
         session.configure(config);
         arFragment!!.arSceneView.setupSession(session)
         arFragment!!.arSceneView.session.resume()
-        var node : InfoNode
+        var node : InfoNode? = null
+        
         /**화면에 고정 시키기**/
         arFragment!!.arSceneView.scene.addOnUpdateListener {
             if (arFragment!!.arSceneView.arFrame == null) {
@@ -164,13 +123,7 @@ class ARActivity : AppCompatActivity() {
                 Log.d(TAG, "onUpdate: Tracking not started yet");
                 // Tracking not started yet
             }
-            else if ( andyRenderable != null && infoRenderable != null ) {
-
-
-                /*float[] position = {0, 0, -1};
-            float[] rotation = {0, 0, 0, 1};
-            Anchor anchor = session.createAnchor(new Pose(position, rotation));*/
-
+            else{
                 val cameraPos = arFragment!!.arSceneView.scene.camera.worldPosition;
                 val cameraForward = arFragment!!.arSceneView.scene.camera.forward;
                 val position = Vector3.add(cameraPos, cameraForward.scaled(1.0f));
@@ -185,9 +138,9 @@ class ARActivity : AppCompatActivity() {
                     mAnchorNode = AnchorNode(anchor);
                     mAnchorNode!!.setParent(arFragment!!.arSceneView.scene);
                 }
-
-                node = InfoNode(this, idString)
-                node.setParent(mAnchorNode);
+                if(node == null) node = InfoNode(this, idString)
+                node!!.localRotation = Quaternion(x.toFloat(), z.toFloat(), y.toFloat(), 1.0F)
+                node!!.setParent(mAnchorNode);
 
             }
         }
@@ -195,6 +148,8 @@ class ARActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        sm?.registerListener(sl, accelerometer, SensorManager.SENSOR_DELAY_GAME)
+        sm?.registerListener(sl, magnetometer, SensorManager.SENSOR_DELAY_GAME)
         if(session == null){
             session = Session(this@ARActivity)
             var config = Config(session)
@@ -222,42 +177,24 @@ class ARActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onPause() {
+        super.onPause()
+        sm?.unregisterListener(sl, accelerometer)
+        sm?.unregisterListener(sl, magnetometer)
+    }
+    
+    /**Location Manager를 이용한 위치 계산**/
     @RequiresApi(VERSION_CODES.P)
     fun setLocation(){
         try {
-        lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        /*permission check한 후 현재 위치 location에 저장*/
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return
-        }
-        location = lm?.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-
-
-            val wm= getSystemService(Context.WIFI_SERVICE) as WifiManager
-            val wrm = getSystemService(Context.WIFI_RTT_RANGING_SERVICE) as WifiRttManager
-            val ap1ScanResult = wm.scanResults
-            Log.d("log", "api Scan Result size : "+ap1ScanResult.size)
-            val req: RangingRequest = RangingRequest.Builder().run {
-                addAccessPoint(ap1ScanResult[0])
-                build()
-            }
+            lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            /*permission check한 후 현재 위치 location에 저장*/
             if (ActivityCompat.checkSelfPermission(
                     this,
                     Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
                 // TODO: Consider calling
@@ -269,23 +206,36 @@ class ARActivity : AppCompatActivity() {
                 // for ActivityCompat#requestPermissions for more details.
                 return
             }
-
-            wrm.startRanging(req, mainExecutor, object : RangingResultCallback() {
-                override fun onRangingResults(results: List<RangingResult>) {
-                    Log.d("log", ""+results[0].macAddress)
-                }
-                override fun onRangingFailure(code: Int) {  }
-            })
+            location = lm?.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            var decide = decideXYZ()
+            decide.start()
+            decide.join()
         }catch (e : Exception){
             Log.d("log", e.toString())
         }
 
+        /**서버로부터 위치 정보 받아와서 차이 계산**/
+        val listener = object : LocationListener {
+            override fun onLocationChanged(l: Location?) {
+                location = l
+                var decide = decideXYZ()
+                decide.start()
+            }
 
-        var decide = decideXYZ()
-        decide.start()
-        decide.join()
+            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+            }
+
+            override fun onProviderEnabled(provider: String?) {
+            }
+
+            override fun onProviderDisabled(provider: String?) {
+            }
+        }
+
+        lm?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 1.0F, listener)
     }
 
+    /**서버로부터 위치 정보 받아와서 차이 계산**/
     inner class decideXYZ: Thread() {
         override fun run() {
             try {
@@ -304,9 +254,9 @@ class ARActivity : AppCompatActivity() {
                     tableName = jsonObject.get("tableName") as String
                 }
                 url = URL(networkConfig.host + networkConfig.tb + networkConfig.getListByName +"/"+ tableName)
-                var tbX = 0.0
-                var tbY = 0.0
-                var tbZ = 0.0
+                tbX = 0.0
+                tbY = 0.0
+                tbZ = 0.0
                 with(url.openConnection() as HttpURLConnection) {
                     val jsonParser = JSONParser()
                     val jsonObject = jsonParser.parse(
@@ -325,6 +275,41 @@ class ARActivity : AppCompatActivity() {
             }catch (e: java.lang.Exception){
                 Log.d("log", e.toString());
             }
+        }
+    }
+
+}
+class sensorEventListener :  SensorEventListener {
+    private var lastaccelerometer = FloatArray(3)
+    private var lastmagnetometer  = FloatArray(3)
+    private var lastorientation  = FloatArray(3)
+    private var rotationMatrix  = FloatArray(9)
+    private var lastaccelerometerset = false
+    private var lastmagnetometerset = false
+    private var accelerometer : Sensor ? = null
+    private var magnetometer : Sensor ? = null
+    private var azimute = 0.0F
+
+    constructor(accelerometer : Sensor ? = null, magnetometer : Sensor ? = null){
+        this.accelerometer = accelerometer
+        this.magnetometer = magnetometer
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        if(event!!.sensor == accelerometer){
+            System.arraycopy(event.values, 0, lastaccelerometer, 0, event.values.size)
+            lastaccelerometerset = true;
+        }else if(event!!.sensor == magnetometer){
+            System.arraycopy(event.values, 0, lastmagnetometer, 0, event.values.size)
+            lastmagnetometerset = true;
+        }
+        if(lastaccelerometerset && lastmagnetometerset){
+            SensorManager.getRotationMatrix(rotationMatrix, null, lastaccelerometer, lastmagnetometer)
+            azimute =  ( ( Math.toDegrees(SensorManager.getOrientation(rotationMatrix, lastorientation)[0].toDouble()) + 360 ).toInt() % 360 ).toFloat()
+            Log.d("log", "azimute : $azimute")
         }
     }
 }
