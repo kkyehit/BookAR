@@ -13,7 +13,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.bar.config.NetworkConfig
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.manager_activity.*
 import org.json.JSONObject
 import org.json.simple.parser.JSONParser
@@ -54,7 +53,7 @@ class ManagerActivity: AppCompatActivity() {
                 // for ActivityCompat#requestPermissions for more details.
                 return@setOnClickListener
             }
-            var location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            var location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
 
             //Toast.makeText(this@MainActivity, "위도" + location.longitude + "경도"+ location.latitude + "고도"+location.altitude, Toast.LENGTH_SHORT ).show()
 
@@ -73,9 +72,9 @@ class ManagerActivity: AppCompatActivity() {
                                 var jsonObject = JSONObject()
                                 Log.d("log","isonObject is created")
                                 jsonObject.accumulate("name", newName)
-                                jsonObject.accumulate("x", location.longitude.toString())
-                                jsonObject.accumulate("y", location.latitude.toString())
-                                jsonObject.accumulate("z", location.altitude.toString())
+                                jsonObject.accumulate("x", ""+location.longitude)
+                                jsonObject.accumulate("y", ""+location.latitude)
+                                jsonObject.accumulate("z", ""+location.altitude)
 
                                 var json = jsonObject.toString()
                                 Log.d("log","ison is created")

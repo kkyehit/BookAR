@@ -8,5 +8,5 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="6dp"
-    android:text=""
+    android:text="test"
     android:textAlignment="center" />
