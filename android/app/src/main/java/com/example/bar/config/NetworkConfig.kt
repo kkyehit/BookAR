@@ -1,7 +1,7 @@
 package com.example.bar.config
 
 class NetworkConfig {
-    public val host = "http://192.168.43.70:8080"
+    public val host = "http://192.168.219.107:8080"
     public val tb = "/table"
     public val books = "/books"
     public val getListByName = "/getListByName"

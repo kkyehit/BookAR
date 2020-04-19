@@ -4,7 +4,7 @@ create table books(
     authorName varchar(20),
     tableName varchar(20),
     state varchar(1) default "0",
-    foreign key (table_name) references tb(name) on delete cascade
+    foreign key (tableName) references tb(name) on delete cascade
 );
 insert into books (bookName, authorName, tableName ) values ("test", "test", "test");
 
