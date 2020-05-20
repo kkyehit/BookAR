@@ -2,23 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5dcb5c1a-ea88-4a1d-bf46-bbb1e41ee802" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../android/app/sampledata/models/direction.mtl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../android/app/sampledata/models/direction.obj" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../android/app/sampledata/models/direction.sfa" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileContent/fileContent.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileContent/fileContent.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/resources/main/tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/tables.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/tables.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../android/app/src/main/java/com/example/bar/config/NetworkConfig.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../android/app/src/main/java/com/example/bar/config/NetworkConfig.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../android/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../android/app/src/main/res/layout/activity_main.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../android/app/src/main/res/layout/books_listview_item.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../android/app/src/main/res/layout/books_listview_item.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../android/app/src/main/res/layout/manager_activity.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../android/app/src/main/res/layout/manager_activity.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../android/app/src/main/res/layout/search_activity.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../android/app/src/main/res/layout/search_activity.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../android/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../android/app/src/main/java/com/example/bar/AR/Node/InfoNode.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../android/app/src/main/java/com/example/bar/AR/Node/InfoNode.kt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

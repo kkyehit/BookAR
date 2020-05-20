@@ -14,8 +14,10 @@ import java.util.function.Function
 
 class InfoNode() : Node() {
     private var infoCard : Node ?= null
-    private var andy : Node ?= null
-    private var andyRenderable : ModelRenderable? = null
+    //private var andy : Node ?= null
+    //private var andyRenderable : ModelRenderable? = null
+    private var directrion : Node ?= null
+    //private var directionRenderable : ModelRenderable? = null
     private var context : Context ?= null
     private var bookId : String ?= null
     constructor(context: Context, bookId : String) : this(){
@@ -48,7 +50,7 @@ class InfoNode() : Node() {
                     }
                 )
         }
-        if (andy == null) {
+        /*if (andy == null) {
             andy = Node()
             andy!!.setParent(this)
             ModelRenderable.builder()
@@ -71,6 +73,31 @@ class InfoNode() : Node() {
                     }
                 )
             andy!!.localPosition = Vector3(0.0f, 0.0f, 0.0f)
+        }*/
+
+        if (directrion == null) {
+            directrion = Node()
+            directrion!!.setParent(this)
+            ModelRenderable.builder()
+                .setSource(context, R.raw.direction)
+                .build()
+                .thenAccept(Consumer { renderable: ModelRenderable ->
+
+                    directrion!!.renderable= renderable
+                })
+                .exceptionally(
+                    Function<Throwable, Void?> { throwable: Throwable? ->
+                        val toast = Toast.makeText(
+                            context,
+                            "Unable to load direction renderable",
+                            Toast.LENGTH_LONG
+                        )
+                        toast.setGravity(Gravity.CENTER, 0, 0)
+                        toast.show()
+                        null
+                    }
+                )
+            directrion!!.localPosition = Vector3(0.0f, 0.0f, 0.0f)
         }
     }
 }

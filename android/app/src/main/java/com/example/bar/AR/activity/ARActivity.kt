@@ -139,7 +139,7 @@ class ARActivity : AppCompatActivity(){
                     mAnchorNode!!.setParent(arFragment!!.arSceneView.scene);
                 }
                 if(node == null) node = InfoNode(this, idString)
-                node!!.localRotation = Quaternion(x.toFloat(), z.toFloat(), y.toFloat(), 1.0F)
+                //node!!.localRotation = Quaternion(x.toFloat(), z.toFloat(), y.toFloat(), 1.0F)
                 node!!.setParent(mAnchorNode);
 
             }
