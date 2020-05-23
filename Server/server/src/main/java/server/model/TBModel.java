@@ -3,6 +3,7 @@ package server.model;
 public class TBModel {
 	String name;
 	String x,y,z;
+	String Floor;
 
 	public void setName(String name) {
 		this.name = name;
@@ -18,6 +19,14 @@ public class TBModel {
 
 	public void setZ(String z) {
 		this.z = z;
+	}
+
+	public void setFloor(String floor) {
+		Floor = floor;
+	}
+
+	public String getFloor() {
+		return Floor;
 	}
 
 	public String getName() {

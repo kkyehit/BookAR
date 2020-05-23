@@ -23,5 +23,5 @@ public interface TBDAO {
 
 	TBModel findByName(String name);
 	List<TBModel> findAll();
-	void insertTBModel(String name, String x, String y, String z);
+	void insertTBModel(String name, String x, String y, String z, String floor);
 }

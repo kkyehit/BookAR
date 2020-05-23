@@ -24,8 +24,8 @@ public class BookController {
 	@RequestMapping(value = "add", method = RequestMethod.POST)
 	@ResponseBody
 	public String addTable(@RequestBody BooksModel booksModel){
-		System.out.println("books/addTable Called ("+booksModel.getBookName()+","+ booksModel.getAuthorName()+","+ booksModel.getTableName()+")");
-		booksDAO.insertBooksModel(booksModel.getBookName(), booksModel.getAuthorName(), booksModel.getTableName());
+		System.out.println("books/addTable Called ("+booksModel.getBookName()+","+ booksModel.getAuthorName()+","+ booksModel.getTableName()+","+booksModel.getFloor()+")");
+		booksDAO.insertBooksModel(booksModel.getBookName(), booksModel.getAuthorName(), booksModel.getTableName(), booksModel.getFloor());
 		return "a";
 	}
 

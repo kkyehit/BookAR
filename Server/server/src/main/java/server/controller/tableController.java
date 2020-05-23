@@ -24,7 +24,7 @@ public class tableController {
 	@ResponseBody
 	public String addTable(@RequestBody TBModel tbModel){
 		System.out.println("table/addTable Called");
-		tbdao.insertTBModel(tbModel.getName(), tbModel.getX(), tbModel.getY(), tbModel.getZ());
+		tbdao.insertTBModel(tbModel.getName(), tbModel.getX(), tbModel.getY(), tbModel.getZ(), tbModel.getFloor());
 		return "a";
 	}
 

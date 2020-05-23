@@ -13,5 +13,5 @@ public interface BooksDAO {
 	List<BooksModel> findByState(String state);
 	List<BooksModel> findAll();
 	BooksModel findById(String id);
-	void insertBooksModel(String bookName, String authorName, String tableName);
+	void insertBooksModel(String bookName, String authorName, String tableName, String floor);
 }

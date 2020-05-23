@@ -44,6 +44,8 @@ class SearchActivity : AppCompatActivity() {
             Toast.makeText(this@SearchActivity, book.name+"을 선택하였습니다.", Toast.LENGTH_LONG).show();
             var intent = Intent(this, ARActivity::class.java)
             intent.putExtra("bookId", book.id)
+            intent.putExtra("bookName", book.name)
+            intent.putExtra("bookFloor", book.floor)
             startActivity(intent)
         }
     }
@@ -110,8 +112,10 @@ class SearchActivity : AppCompatActivity() {
                         var tableName = jsonObject.get("tableName") as String
                         //Log.d("log", "4: "+tableName)
                         var state = jsonObject.get("state") as String
+                        Log.d("json parsing", "4: "+jsonObject.get("floor"))
+                        var floor = jsonObject.get("floor") as String
 
-                        adapter.addItem(id, bookName, authorName, tableName, state)
+                        adapter.addItem(id, bookName, authorName, tableName, state, floor)
                     }
                 }
 

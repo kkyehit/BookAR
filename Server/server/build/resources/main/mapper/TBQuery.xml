@@ -12,6 +12,6 @@
     </select>
 
     <insert id="insertTBModel">
-        INSERT INTO tb VALUES (#{name}, #{x}, #{y}, #{z})
+        INSERT INTO tb VALUES (#{name}, #{x}, #{y}, #{z}, #{floor})
     </insert>
 </mapper>

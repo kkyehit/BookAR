@@ -8,8 +8,8 @@
 
     <EditText
         android:id="@+id/newTBNameET"
-        android:layout_width="273dp"
-        android:layout_height="46dp"
+        android:layout_width="276dp"
+        android:layout_height="37dp"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,10 +24,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="132dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="52dp"
+        android:text="층 수 : "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="34dp" />
+
+    <EditText
+        android:id="@+id/newTBFloorET"
+        android:layout_width="279dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/textView4"
+        app:layout_constraintTop_toBottomOf="@+id/newTBNameET" />
 </androidx.constraintlayout.widget.ConstraintLayout>

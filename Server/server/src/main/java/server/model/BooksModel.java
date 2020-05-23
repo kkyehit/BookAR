@@ -2,10 +2,18 @@ package server.model;
 
 public class BooksModel {
 	int id;
-	String bookName, authorName, tableName, state;
+	String bookName, authorName, tableName, state, floor;
 
 	public String getState() {
 		return state;
+	}
+
+	public String getFloor() {
+		return floor;
+	}
+
+	public void setFloor(String floor) {
+		this.floor = floor;
 	}
 
 	public void setState(String state) {

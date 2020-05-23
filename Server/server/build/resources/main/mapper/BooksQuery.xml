@@ -23,6 +23,6 @@
     </select>
 
     <insert id="insertBooksModel">
-        INSERT INTO books (bookName, authorName, tableName) VALUES (#{bookName}, #{authorName}, #{tableName})
+        INSERT INTO books (bookName, authorName, tableName, floor) VALUES (#{bookName}, #{authorName}, #{tableName}, #{floor})
     </insert>
 </mapper>

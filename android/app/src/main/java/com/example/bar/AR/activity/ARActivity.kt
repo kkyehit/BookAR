@@ -57,6 +57,9 @@ class ARActivity : AppCompatActivity(){
 
     private var id :Long = 0L
     private var idString: String = ""
+    private var bookFloor: String = ""
+    private var tableFloor: String = ""
+    private var bookName: String = ""
 
     private var networkConfig = NetworkConfig()
     private var x = 0.0
@@ -65,6 +68,8 @@ class ARActivity : AppCompatActivity(){
     private var tbX = 0.0
     private var tbY = 0.0
     private var tbZ = 0.0
+    private var theta = 0.0F
+    private var thetaChanged = false
     private var lm : LocationManager ?= null
     private var location : Location ?= null
     private var mAnchorNode : AnchorNode ?= null
@@ -84,6 +89,8 @@ class ARActivity : AppCompatActivity(){
         }
         Toast.makeText(this@ARActivity, "땅을 클릭하면 그 곳을 기준으로 안내 표시가 생성됩니다.", Toast.LENGTH_SHORT). show()
         id = intent.extras!!.getLong("bookId")
+        bookFloor = intent.extras!!.getString("bookFloor")
+        bookName = intent.extras!!.getString("bookName")
         idString = id.toString()
         setContentView(R.layout.ar_activity)
         arFragment = supportFragmentManager.findFragmentById(R.id.ux_fragment) as ArFragment
@@ -104,8 +111,8 @@ class ARActivity : AppCompatActivity(){
         /**session 설정후 할당 및 시작**/
         val session = Session(this@ARActivity)
         val config = Config(session)
-        config.cloudAnchorMode = Config.CloudAnchorMode.ENABLED
-        config.planeFindingMode = Config.PlaneFindingMode.HORIZONTAL_AND_VERTICAL
+        config.cloudAnchorMode = Config.CloudAnchorMode.DISABLED
+        //config.planeFindingMode = Config.PlaneFindingMode.HORIZONTAL_AND_VERTICAL
         config.updateMode = Config.UpdateMode.LATEST_CAMERA_IMAGE
         session.configure(config);
         arFragment!!.arSceneView.setupSession(session)
@@ -114,13 +121,14 @@ class ARActivity : AppCompatActivity(){
         
         /**화면에 고정 시키기**/
         arFragment!!.arSceneView.scene.addOnUpdateListener {
+
+
             if (arFragment!!.arSceneView.arFrame == null) {
                 Log.d(TAG, "onUpdate: No frame available");
 // No frame available
             }
-
             else if (arFragment!!.arSceneView.arFrame.camera.trackingState != TrackingState.TRACKING) {
-                Log.d(TAG, "onUpdate: Tracking not started yet");
+                Log.d(TAG, "onUpdate: Tracking not started yet "+ sl!!.getAzimute());
                 // Tracking not started yet
             }
             else{
@@ -131,6 +139,7 @@ class ARActivity : AppCompatActivity(){
                 // Create an ARCore Anchor at the position.
                 val pose = Pose.makeTranslation(position.x, position.y, position.z);
                 val anchor = arFragment!!.arSceneView.session.createAnchor(pose);
+
                 if(mAnchorNode != null) {
                     mAnchorNode!!.anchor.detach()
                     mAnchorNode!!.anchor = anchor
@@ -138,8 +147,20 @@ class ARActivity : AppCompatActivity(){
                     mAnchorNode = AnchorNode(anchor);
                     mAnchorNode!!.setParent(arFragment!!.arSceneView.scene);
                 }
-                if(node == null) node = InfoNode(this, idString)
-                //node!!.localRotation = Quaternion(x.toFloat(), z.toFloat(), y.toFloat(), 1.0F)
+                if(thetaChanged) {
+                    Log.d("draw", "calling newDirection")
+                    Log.d("draw", "theta "+theta)
+                    Log.d("draw", "sl!!.azu "+sl!!.getAzimute())
+                    thetaChanged = false
+                };
+                //node!!.worldRotation = Quaternion.lookRotation(node!!.worldPosition,cameraForward)
+                //node!!.setDirection(-(sl!!.getAzimute()*2))
+
+                /**노드 생성**/
+                if(node == null) node = InfoNode(this, idString, bookFloor, tableFloor, bookName)
+                if(node!!.getDirection() == null) node!!.newDirection(theta)
+                node!!.setDirection(90.0F-theta-sl!!.getAzimute())
+
                 node!!.setParent(mAnchorNode);
 
             }
@@ -245,7 +266,7 @@ class ARActivity : AppCompatActivity(){
                 with(url.openConnection() as HttpURLConnection) {
                     var reader = BufferedReader(InputStreamReader(inputStream, "UTF-8"));
                     var line = reader.readLine()
-                    Log.d("log", "url : " + url);
+                    Log.d("decideXYZ", "url : " + url);
                     while(line != null){
                         json += line
                         line = reader.readLine()
@@ -265,13 +286,20 @@ class ARActivity : AppCompatActivity(){
                     tbX = (jsonObject.get("x") as String).toDouble()
                     tbY = (jsonObject.get("y") as String).toDouble()
                     tbZ = (jsonObject.get("z") as String).toDouble()
+                    tableFloor = (jsonObject.get("floor") as String)
                 }
                 x = ( ( tbX * 100000000 ).toLong() - (location?.longitude!! * 100000000).toLong() ).toDouble() / 1000
                 y = ( ( tbY * 100000000 ).toLong() - (location?.latitude!! * 100000000).toLong() ).toDouble() / 1000
                 z =  tbZ - location?.altitude!!
-                Log.d("log", ""+x+"="+location?.longitude!!+ " - " +tbX+"("+location?.longitude+")");
-                Log.d("log", ""+y+"="+location?.latitude!!+ " - " +tbY+"("+location?.latitude+")");
-                Log.d("log", ""+z+"="+location?.altitude!!+ " - " +tbZ+"("+location?.altitude+")");
+                
+                /**각도 계산**/
+                theta = ( Math.toDegrees(Math.atan2(y, x) ) ).toFloat();
+                thetaChanged = true
+
+                Log.d("decideXYZ", ""+x+"="+location?.longitude!!+ " - " +tbX+"("+location?.longitude+")");
+                Log.d("decideXYZ", ""+y+"="+location?.latitude!!+ " - " +tbY+"("+location?.latitude+")");
+                Log.d("decideXYZ", ""+z+"="+location?.altitude!!+ " - " +tbZ+"("+location?.altitude+")");
+                Log.d("sensorEventListener", "theta : "+theta+")");
             }catch (e: java.lang.Exception){
                 Log.d("log", e.toString());
             }
@@ -284,11 +312,14 @@ class sensorEventListener :  SensorEventListener {
     private var lastmagnetometer  = FloatArray(3)
     private var lastorientation  = FloatArray(3)
     private var rotationMatrix  = FloatArray(9)
+    private var iMatrix  = FloatArray(9)
     private var lastaccelerometerset = false
     private var lastmagnetometerset = false
     private var accelerometer : Sensor ? = null
     private var magnetometer : Sensor ? = null
     private var azimute = 0.0F
+    private var pitch = 0.0F
+    private var roll = 0.0F
 
     constructor(accelerometer : Sensor ? = null, magnetometer : Sensor ? = null){
         this.accelerometer = accelerometer
@@ -299,18 +330,30 @@ class sensorEventListener :  SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-        if(event!!.sensor == accelerometer){
+        if (event!!.sensor.type == Sensor.TYPE_ACCELEROMETER){
             System.arraycopy(event.values, 0, lastaccelerometer, 0, event.values.size)
             lastaccelerometerset = true;
-        }else if(event!!.sensor == magnetometer){
+        }else if(event!!.sensor.type == Sensor.TYPE_MAGNETIC_FIELD){
             System.arraycopy(event.values, 0, lastmagnetometer, 0, event.values.size)
             lastmagnetometerset = true;
         }
         if(lastaccelerometerset && lastmagnetometerset){
-            SensorManager.getRotationMatrix(rotationMatrix, null, lastaccelerometer, lastmagnetometer)
-            azimute =  ( ( Math.toDegrees(SensorManager.getOrientation(rotationMatrix, lastorientation)[0].toDouble()) + 360 ).toInt() % 360 ).toFloat()
-            Log.d("log", "azimute : $azimute")
+            var success = SensorManager.getRotationMatrix(rotationMatrix, iMatrix, lastaccelerometer, lastmagnetometer)
+            //azimute =  ( ( Math.toDegrees(SensorManager.getOrientation(rotationMatrix, lastorientation)[0].toDouble()) + 360 ).toInt() % 360 ).toFloat()
+            if(success){
+                SensorManager.getOrientation(rotationMatrix, lastorientation)
+                //azimute = (Math.toDegrees(lastorientation[0].toDouble() + 360.0F).toInt() % 360).toFloat();
+                azimute = (Math.toDegrees(lastorientation[0].toDouble())).toFloat();
+                pitch = Math.toDegrees(lastorientation[1].toDouble()).toFloat();
+                roll = Math.toDegrees(lastorientation[2].toDouble()).toFloat();
+            }
+
+            Log.d("sensorEventListener", "azimute : $azimute pith : $pitch roll : $roll")
         }
+    }
+
+    public fun getAzimute(): Float {
+        return azimute;
     }
 }
 

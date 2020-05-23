@@ -2,16 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5dcb5c1a-ea88-4a1d-bf46-bbb1e41ee802" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../../android/app/sampledata/models/direction.mtl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../android/app/sampledata/models/direction.obj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../android/app/sampledata/models/direction.sfa" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../android/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/DAO/BooksDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/server/DAO/BooksDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/DAO/TBDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/server/DAO/TBDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/controller/BookController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/server/controller/BookController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/controller/androidController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/server/controller/androidController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/controller/tableController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/server/controller/tableController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/model/BooksModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/server/model/BooksModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/server/model/TBModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/server/model/TBModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/BooksQuery.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/BooksQuery.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/TBQuery.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/TBQuery.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../android/app/src/main/java/com/example/bar/AR/Node/InfoNode.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../android/app/src/main/java/com/example/bar/AR/Node/InfoNode.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../android/app/src/main/java/com/example/bar/AR/activity/ARActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../../android/app/src/main/java/com/example/bar/AR/activity/ARActivity.kt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

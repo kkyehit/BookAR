@@ -8,6 +8,7 @@ class BookListItem {
     var author: String? = null
     var state: String? = null
     var stateNum: String? = null
+    var floor: String? = null
     var id: Long? = 0
     var table: String? = null
 }

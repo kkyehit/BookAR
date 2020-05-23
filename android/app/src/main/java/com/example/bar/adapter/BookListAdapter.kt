@@ -52,13 +52,14 @@ class BookListAdapter: BaseAdapter() {
         return bookList.size
     }
 
-    fun addItem(id: Long, name: String, author: String, table: String, state: String) {
+    fun addItem(id: Long, name: String, author: String, table: String, state: String, floor: String) {
         var bookItem =BookListItem();
         bookItem.name = name
         bookItem.author = author
         bookItem.stateNum = state
         bookItem.id = id
         bookItem.table = table
+        bookItem.floor = floor
 
         when(state){
             "0" -> bookItem.state = "대출가능"

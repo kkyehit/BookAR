@@ -61,11 +61,13 @@ class ManagerActivity: AppCompatActivity() {
             val builder = AlertDialog.Builder(this)
             val dialogView = layoutInflater.inflate(R.layout.new_table_name_input_layout, null)
             val dialogEditText = dialogView.findViewById<EditText>(R.id.newTBNameET)
+            val dialogEditText2 = dialogView.findViewById<EditText>(R.id.newTBFloorET)
 
             builder.setView(dialogView)
                 .setPositiveButton("확인") { DialogInterface, i ->
 
                     var newName = dialogEditText.text.toString()
+                    var newFloor = dialogEditText2.text.toString()
                     class netThread : Thread() {
                         override fun run() {
                             try {
@@ -75,6 +77,7 @@ class ManagerActivity: AppCompatActivity() {
                                 jsonObject.accumulate("x", ""+location.longitude)
                                 jsonObject.accumulate("y", ""+location.latitude)
                                 jsonObject.accumulate("z", ""+location.altitude)
+                                jsonObject.accumulate("floor", newFloor)
 
                                 var json = jsonObject.toString()
                                 Log.d("log","ison is created")
@@ -118,6 +121,7 @@ class ManagerActivity: AppCompatActivity() {
             val dialogView = layoutInflater.inflate(R.layout.new_book_input_layout, null)
             val dialogBookName = dialogView.findViewById<EditText>(R.id.newBookName)
             val dialogBookAuthor = dialogView.findViewById<EditText>(R.id.newBookAuthor)
+            val dialogBookFloor = dialogView.findViewById<EditText>(R.id.newBookFloor)
             val dialogBookTableSpinner = dialogView.findViewById<Spinner>(R.id.newBookTableSpinner)
             var tableList: ArrayList<String> = ArrayList()
             var tableName: String? = ""
@@ -152,6 +156,7 @@ class ManagerActivity: AppCompatActivity() {
                         jsonObject.accumulate("bookName", dialogBookName.text.toString())
                         jsonObject.accumulate("authorName", dialogBookAuthor.text.toString())
                         jsonObject.accumulate("tableName", tableName)
+                        jsonObject.accumulate("floor", dialogBookFloor.text.toString())
 
                         var json = jsonObject.toString()
                         Log.d("log","books JSON is created")

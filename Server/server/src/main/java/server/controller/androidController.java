@@ -30,7 +30,7 @@ public class androidController {
 	@RequestMapping(value = "/addTest", method = RequestMethod.POST)
 	public void addTest(@RequestBody TBModel tbModel){
 		System.out.println("addTest is called ");
-		tbdao.insertTBModel(tbModel.getName(), tbModel.getX(), tbModel.getY(), tbModel.getZ());
+		tbdao.insertTBModel(tbModel.getName(), tbModel.getX(), tbModel.getY(), tbModel.getZ(), tbModel.getFloor());
 	}
 	@RequestMapping(value = "/addTest", method = RequestMethod.GET)
 	public void addTest2(){

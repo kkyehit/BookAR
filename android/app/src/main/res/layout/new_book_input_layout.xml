@@ -9,8 +9,8 @@
     <EditText
         android:id="@+id/newBookAuthor"
         android:layout_width="270dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="96dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="60dp"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,7 +20,7 @@
     <EditText
         android:id="@+id/newBookName"
         android:layout_width="270dp"
-        android:layout_height="64dp"
+        android:layout_height="50dp"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,7 +30,7 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="97dp"
-        android:layout_height="51dp"
+        android:layout_height="50dp"
         android:text="책 이름 : "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -38,29 +38,49 @@
     <TextView
         android:id="@+id/textView2"
         android:layout_width="95dp"
-        android:layout_height="62dp"
-        android:layout_marginTop="96dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="60dp"
         android:text="저자 : "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="93dp"
-        android:layout_height="73dp"
-        android:layout_marginTop="188dp"
+        android:id="@+id/textView5"
+        android:layout_width="95dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="128dp"
         android:text="테이블 이름:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="95dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="188dp"
+        android:text="칸 수:"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/newBookTableSpinner"
         android:layout_width="270dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="28dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.595"
+        app:layout_constraintHorizontal_bias="0.521"
         app:layout_constraintStart_toEndOf="@+id/textView3"
         app:layout_constraintTop_toBottomOf="@+id/newBookAuthor" />
+
+    <EditText
+        android:id="@+id/newBookFloor"
+        android:layout_width="270dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/newBookTableSpinner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
